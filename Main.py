@@ -1,15 +1,20 @@
+#from numpy import loadtxt
+#from keras.models import Sequential
 import tkinter as tk
+
+
 
 
 
 
 #sets up the gui
 class Application(tk.Frame):
-    def __init__(self, master=None,):
+    def __init__(self, master=None):
         super().__init__(master)
         self.master = master
         self.pack()
         self.create_widgets()
+
 
 
 #creates the widgets
@@ -21,6 +26,14 @@ class Application(tk.Frame):
         self.answered_lane = -1
         self.answered_enemy = -1
         self.enemy_or_type_button = -1
+        self.example_choices = [
+        [0,0,3],
+        [1,2,0],
+        [2,2,2],
+        [3,3,4],
+        [4,1,3],
+        [0,1,0]
+        ]
         self.type = ""
         self.lane = 0
         self.enemy = 0
@@ -184,6 +197,7 @@ class Application(tk.Frame):
         self.answered_lane=-1
         self.answered_enemy = -1
         self.enemy_or_type_button = -1;
+        self.guess.delete("1.0",tk.END)
         self.mid["bg"] = "#3399ff"
         self.jg["bg"] = "#3399ff"
         self.bottom["bg"] = "#3399ff"
@@ -202,13 +216,82 @@ class Application(tk.Frame):
         if self.answered_enemy == -1 and self.enemy_or_type_button ==1:
             self.answered_enemy = 1
         if(self.answered_lane == 1 and self.answered_enemy == 1):
-            self.machine_learning_time()
+            #self.build_tree(example_choices)
+            self.give_result()
 
 
 
-    def machine_learning_time(self):
-        self.example_choices = [[0,0,3],[1,2,0],[2,2,2],[3,3,4],[4,1,3]]
-        print(self.example_choices[0][2])
+
+
+    #def build_tree(self,data_set):
+        #info, question =
+
+    #self.tree = self.build_tree(self.example_choices)
+
+    def rules(self,lane,enemy):
+        self.result = 0
+        if lane == 0:
+            if enemy == 0:
+                self.result = 4
+            elif enemy == 1:
+                self.result = 3
+        if lane == 1:
+            if enemy == 0:
+                self.result = 3
+            elif enemy == 3:
+                self.result = 2
+            elif enemy == 2:
+                self.result = 0
+        if lane == 2:
+            if enemy == 2:
+                self.result = 0
+            elif enemy == 0:
+                self.result = 4
+            elif enemy == 3:
+                self.result = 2
+        if lane == 3:
+            if enemy == 4:
+                self.result = 4
+            elif enemy == 2:
+                self.result = 0
+            elif enemy == 3:
+                self.result = 4
+        if lane == 4:
+            if enemy == 0:
+                self.result =3
+            elif enemy == 1:
+                self.result = 1
+            elif enemy == 3:
+                self.result = 1
+    def translate_result(self, result):
+        if result == 0:
+            return "Bruser"
+        elif result == 1:
+            return "Tank"
+        elif result ==2:
+            return "Assasin"
+        elif result ==3:
+            return "Mage"
+        elif result == 4:
+            return "Range"
+
+    def give_result(self):
+
+        self.rules(self.lane,self.enemy)
+        self.word_result = self.translate_result(self.result)
+        self.type = "Pick a " + self.word_result
+        print(self.type)
+        self.guess.insert(tk.END,self.type)
+
+
+
+
+
+
+
+
+
+
 
 
 
